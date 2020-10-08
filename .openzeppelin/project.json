@@ -1,0 +1,29 @@
+{
+  "manifestVersion": "2.2",
+  "contracts": {
+    "UniswapV2Router02": "UniswapV2Router02",
+    "WETH9": "WETH9"
+  },
+  "dependencies": {},
+  "name": "@uniswap/v2-periphery",
+  "version": "1.1.0-beta.0",
+  "compiler": {
+    "compilerSettings": {
+      "evmVersion": "istanbul",
+      "optimizer": {
+        "enabled": true,
+        "runs": "999999"
+      }
+    },
+    "typechain": {
+      "enabled": true,
+      "outDir": "./types/contracts/",
+      "target": "truffle"
+    },
+    "manager": "openzeppelin",
+    "solcVersion": "0.6.6",
+    "artifactsDir": "build/contracts",
+    "contractsDir": "contracts"
+  },
+  "telemetryOptIn": true
+}

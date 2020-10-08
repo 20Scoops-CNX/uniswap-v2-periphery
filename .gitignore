@@ -1,2 +1,13 @@
-build/
 node_modules/
+build/
+
+.openzeppelin/dev-*.json
+.openzeppelin/.session
+
+.idea/
+
+.env
+
+types/
+
+.DS_Store

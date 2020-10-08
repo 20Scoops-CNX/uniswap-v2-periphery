@@ -1,4 +1,4 @@
-pragma solidity =0.6.6;
+pragma solidity = 0.6.6;
 
 import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol';
 import '@uniswap/lib/contracts/libraries/TransferHelper.sol';
@@ -11,9 +11,10 @@ import './interfaces/IWETH.sol';
 
 contract UniswapV2Router02 is IUniswapV2Router02 {
     using SafeMath for uint;
-
     address public immutable override factory;
     address public immutable override WETH;
+
+    event LiquidityAdded(address pair, uint);
 
     modifier ensure(uint deadline) {
         require(deadline >= block.timestamp, 'UniswapV2Router: EXPIRED');
@@ -42,6 +43,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         if (IUniswapV2Factory(factory).getPair(tokenA, tokenB) == address(0)) {
             IUniswapV2Factory(factory).createPair(tokenA, tokenB);
         }
+        (amountA, amountB) = UniswapV2Library.getReserves(factory, tokenA, tokenB);
         (uint reserveA, uint reserveB) = UniswapV2Library.getReserves(factory, tokenA, tokenB);
         if (reserveA == 0 && reserveB == 0) {
             (amountA, amountB) = (amountADesired, amountBDesired);
@@ -58,6 +60,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
             }
         }
     }
+
     function addLiquidity(
         address tokenA,
         address tokenB,
@@ -90,7 +93,9 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
             amountTokenMin,
             amountETHMin
         );
+
         address pair = UniswapV2Library.pairFor(factory, token, WETH);
+        emit LiquidityAdded(pair, amountToken);
         TransferHelper.safeTransferFrom(token, msg.sender, pair, amountToken);
         IWETH(WETH).deposit{value: amountETH}();
         assert(IWETH(WETH).transfer(pair, amountETH));
